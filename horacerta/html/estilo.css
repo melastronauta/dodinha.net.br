@@ -12,7 +12,7 @@
     color: #ffffff;
     }
     }
-    
+
 body {
     background: rgba(240, 165, 240, 0.548);
     font: normal 15pt Arial;
@@ -30,6 +30,11 @@ section {
     width: 500px;
     margin: auto;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.452);
+}
+
+div {
+    text-align: center;
+    padding: 8px;
 }
 
 footer {
