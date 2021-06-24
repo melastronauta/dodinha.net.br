@@ -37,3 +37,10 @@ and paste the following line:
 ```
 
 Make sure the swap was create correctly using `sudo swapon -s`.
+
+
+## Let's start
+
+Clone this repo to the `www` folder: `git clone https://github.com/hiurequeiroz/dodinha.net.br.git /var/www`. Edit the `whoami` service in the [nginx-proxy.yml] file with your own domain and e-mail.
+
+Now you're finally ready to start the nginx proxy server. Jump to the directory with `cd /var/www` and run `docker-compose -f nginx-proxy.yml up -d`.
