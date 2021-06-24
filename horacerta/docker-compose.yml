@@ -1,0 +1,20 @@
+
+version: '3'
+
+services:
+  web:
+    container_name: "dodinha.net.br"
+    image: httpd:latest
+    restart: unless-stopped
+    volumes:
+      -  ./html/:/usr/local/apache2/htdocs/
+    environment:
+      VIRTUAL_HOST: dodinha.net.br,www.dodinha.net.br
+      LETSENCRYPT_HOST: dodinha.net.br,www.dodinha.net.br
+      LETSENCRYPT_EMAIL: hiure@riseup.net
+networks:
+  default:
+    external:
+      name: nginx-proxy
+volumes:
+  db_data:
