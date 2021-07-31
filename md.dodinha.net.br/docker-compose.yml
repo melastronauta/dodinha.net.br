@@ -1,0 +1,54 @@
+version: '3'
+services:
+  db:
+     image: mariadb:latest
+     environment:
+       - MYSQL_USER=hedgedoc
+       - MYSQL_PASSWORD=${DB_PASS}
+       - MYSQL_DATABASE=hedgedoc
+       - MYSQL_ALLOW_EMPTY_PASSWORD=true
+     volumes:
+       - database:/var/lib/mysql
+       - ./resources/utf8.cnf:/etc/mysql/conf.d/utf8.cnf
+     restart: always
+  app:
+    image: quay.io/hedgedoc/hedgedoc:1.7.1
+    #mem_limit: 256mb         # version 2 only
+    #memswap_limit: 512mb     # version 2 only
+    #read_only: true          # not supported in swarm mode, enable along with tmpfs
+    #tmpfs:
+    #  - /tmp:size=10M
+    #  # Make sure you remove this when you use filesystem as upload type
+    #  - /hedgedoc/public/uploads:size=10M
+    environment:
+      - CMD_DB_URL=mysql://hedgedoc:${DB_PASS}@db:3306/hedgedoc
+      - CMD_USECDN=false
+      - CMD_ALLOW_ANONYMOUS=true
+      - CMD_ALLOW_ANONYMOUS_EDITS=true
+      - CMD_ALLOW_ANONYMOUS_VIEWS=true
+      - CMD_DEFAULT_PERMISSION=freely
+      - CMD_EMAIL=true
+      - CMD_ALLOW_EMAIL_REGISTER=true
+      - CMD_DOMAIN=${DOMAIN}
+      - CMD_PROTOCOL_USESSL=true
+      - CMD_SESSION_SECRET=${SESSION_SECRET}
+      - VIRTUAL_HOST=${DOMAIN}
+      - LETSENCRYPT_HOST=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+      - VIRTUAL_PORT=3000
+    volumes:
+      - uploads:/hedgedoc/public/uploads
+    links:
+      - db
+    restart: always
+    depends_on:
+      - db
+# Define named volumes so data stays in place
+volumes:
+  # Volume for PostgreSQL/MySQL database
+  database:
+  uploads:
+networks:
+  default:
+    external:
+      name: nginx-proxy
